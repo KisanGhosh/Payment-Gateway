@@ -49,13 +49,10 @@ app.post('/api/razorpay/order', async (req, res) => {
     receipt: 'receipt_order_${Date.now()}',
   };
 
-  console.log("I am here")
   try {
     const order = await razorpay.orders.create(options);
-    console.log("order", order)
     res.json(order);
   } catch (error) {
-    console.log("shit")
     res.status(500).json({ error: 'Failed to create order' });
   }
 });
@@ -71,13 +68,9 @@ app.post('/api/payment', async (req, res) => {
       receipt: 'receipt_order_${Date.now()}',
     };
     const order = await razorpay.orders.create(options);
-    console.log("order", order);
     const razorpayPaymentId = order.id;
-    console.log("razorpayPaymentId", razorpayPaymentId);
     const payment = await razorpay.payments.fetch(razorpayPaymentId);
-    console.log("payment", payment);
     if (payment.status === 'captured') {
-      console.log("payment.status", payment.status);
       const connection = await mysql.createConnection(dbConfig);
       await connection.execute(
         'INSERT INTO payments (name, email, amount, razorpay_payment_id) VALUES (?, ?, ?, ?)',
@@ -87,7 +80,6 @@ app.post('/api/payment', async (req, res) => {
 
       res.status(200).json({ success: true });
     } else {
-      console.log("abcdef");
       res.status(500).json({ error: 'Payment not captured' });
     }
   } catch (error) {

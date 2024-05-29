@@ -35,9 +35,7 @@ const PaymentForm = () => {
       try {
         // Step 1: Create an order
         const orderResponse = await axios.post('http://localhost:5000/api/razorpay/order', { amount });
-        console.log("orderResponse", orderResponse);
         const order = orderResponse.data;
-        console.log("order", order);
 
         // Step 2: Open Razorpay payment gateway
         const options = {
@@ -74,7 +72,6 @@ const PaymentForm = () => {
             email,
           },
         };
-        console.log("OPPTIOONSS ", options)
         const rzp = new window.Razorpay(options);
         rzp.open();
       } catch (error) {
